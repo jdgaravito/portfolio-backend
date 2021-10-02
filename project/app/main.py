@@ -11,6 +11,6 @@ def on_startup():
     init_db()
 
 
-@app.get("/ping")
+@app.get("/ping", include_in_schema=False)
 async def pong():
     return {"ping": "pong!"}
