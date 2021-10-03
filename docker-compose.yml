@@ -11,7 +11,7 @@ services:
     ports:
       - 8004:8000
     environment:
-      - DATABASE_URL=postgresql://4dm1nport:4cc3s0gr4nt3d@db:5432/devdb
+      - DATABASE_URL=postgresql+asyncpg://4dm1nport:4cc3s0gr4nt3d@db:5432/devdb
     depends_on:
       - db
 

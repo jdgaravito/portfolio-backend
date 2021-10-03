@@ -1,13 +1,63 @@
 import fastapi
-from typing import Optional, Text
-from fastapi.params import Depends
-from app.models.portfolio_model import Project
+from fastapi import Depends, status
+from fastapi.exceptions import HTTPException
+from sqlalchemy.future import select
+from sqlalchemy.ext.asyncio import AsyncSession
+from typing import Optional, List
+
+from app.db import get_session
+from app.models.portfolio_model import Project, ProjectCreate
+
+
 router = fastapi.APIRouter()
 
-@router.get('/portfolio')
-async def portfolio_index(limit: int = 10, published: bool = True, sort: Optional[str] = None):
-    """Only get 10 publushed projects""" 
-    if published: 
-        return {'data': f'Portfolio list showing {limit} projects'}
-    else:
-        return {'data': f'{limit} projects from db'} 
+@router.get('/portfolio', response_model=List[Project],
+status_code=status.HTTP_200_OK)
+async def get_all_projects(session: AsyncSession = Depends(get_session)):
+    statement=select(Project)
+    result= await session.execute(statement)
+    projects = result.scalars().all()
+
+    # return [Project(name=project.name, 
+    #                 summary=project.summary,
+    #                 description=project.description,
+    #                 tags=project.tags,
+    #                 award=project.award,
+    #                 url=project.url,
+    #                 published=project.published,
+    #                 image=project.image,
+    #                 images=project.images,
+    #                 learning=project.learning,
+    #                 tech=project.tech,
+    #                 tools=project.tools) 
+    #         for project in projects]
+    return projects
+
+
+@router.post('/portfolio', response_model=Project, status_code=status.HTTP_201_CREATED)
+async def add_project(project: Project, session: AsyncSession = Depends(get_session)):
+    project = Project(name=project.name, 
+                    summary=project.summary,
+                    description=project.description,
+                    category=project.category,
+                    award=project.award,
+                    url=project.url,
+                    published=project.published,
+                    image=project.image,
+                    images=project.images,
+                    learning=project.learning,
+                    tech=project.tech,
+                    tools=project.tools)  
+    session.add(project)
+    await session.commit()
+    await session.refresh(project)
+    return project
+
+@router.get('/portfolio/{project_id}', response_model=Project)
+async def get_a_project(project_id: int, session: AsyncSession= Depends(get_session)):
+    statement = select(Project).where(Project.id == project_id)
+    result = await session.execute(statement)
+    if result == None:
+       raise HTTPException(status_code=status.HTTP_404_NOT_FOUND) 
+   
+    return result
