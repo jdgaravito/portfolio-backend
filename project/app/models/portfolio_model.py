@@ -7,12 +7,12 @@ class ProjectBase(SQLModel):
     name: Optional[str]
     summary: Optional[str]
     description: Optional[str]
-    category: Set[str] = set()
+    category: Optional[str]
     award: Optional[str] = None
     url: Optional[str] = None
     published: datetime = datetime.utcnow()
     image: str = "placeholderMainImage"
-    images: List[str] = []
+    images: Optional[str]
     learning: Optional[str]
     tech: Optional[str]
     tools: Optional[str]
@@ -25,5 +25,6 @@ class Project(ProjectBase, table=True):
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
 
-class ProjectCreate(ProjectBase):
-    pass
+# class ProjectCreate(ProjectBase):
+#     pass
+

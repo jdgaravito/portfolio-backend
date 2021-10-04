@@ -1,10 +1,9 @@
 import os
 
 from sqlmodel import SQLModel
-
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
-from . import models
+
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
 

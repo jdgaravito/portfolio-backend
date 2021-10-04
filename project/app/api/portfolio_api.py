@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional, List
 
 from app.db import get_session
-from app.models.portfolio_model import Project, ProjectCreate
+from app.models.portfolio_model import Project
 
 
 router = fastapi.APIRouter()
@@ -21,7 +21,7 @@ async def get_all_projects(session: AsyncSession = Depends(get_session)):
     # return [Project(name=project.name, 
     #                 summary=project.summary,
     #                 description=project.description,
-    #                 tags=project.tags,
+    #                 category=project.category,
     #                 award=project.award,
     #                 url=project.url,
     #                 published=project.published,
@@ -57,7 +57,7 @@ async def add_project(project: Project, session: AsyncSession = Depends(get_sess
 async def get_a_project(project_id: int, session: AsyncSession= Depends(get_session)):
     statement = select(Project).where(Project.id == project_id)
     result = await session.execute(statement)
-    if result == None:
+    if None == result:
        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND) 
    
     return result
