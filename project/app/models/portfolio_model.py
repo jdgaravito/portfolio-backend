@@ -4,7 +4,7 @@ from sqlmodel import SQLModel, Field
 
 
 class ProjectBase(SQLModel):
-    name: Optional[str]
+    name: str
     summary: Optional[str]
     description: Optional[str]
     category: Optional[str]
