@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List, Optional, Set
 from sqlmodel import SQLModel, Field
-
+from sqlalchemy.sql.schema import Column
 
 class ProjectBase(SQLModel):
     name: str
