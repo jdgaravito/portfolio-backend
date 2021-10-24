@@ -1,18 +1,18 @@
 from datetime import datetime
 from typing import List, Optional, Set
-from sqlmodel import SQLModel, Field
 from sqlalchemy.sql.schema import Column
+from sqlmodel import SQLModel, Field, String, ARRAY
 
 class ProjectBase(SQLModel):
     name: str
     summary: Optional[str]
     description: Optional[str]
-    category: Optional[str]
+    category: List[str] = Field(default=None, sa_column=Column(ARRAY(String())))
     award: Optional[str] = None
     url: Optional[str] = None
     published: datetime = datetime.utcnow()
     image: str = "placeholderMainImage"
-    images: Optional[str]
+    images: List[str] = Field(default=None, sa_column=Column(ARRAY(String())))
     learning: Optional[str]
     tech: Optional[str]
     tools: Optional[str]
